@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 local grafana = import 'github.com/grafana/grafonnet-lib/grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local template = grafana.template;
 local dashboardUid = 'discourse-jobs';
 local matcher = 'instance=~"$instance"';
+=======
+local grafana = (import 'grafonnet/grafana.libsonnet');
+local dashboard = grafana.dashboard;
+local template = grafana.template;
+local dashboardUid = 'discourse-jobs';
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
 
 local prometheus = grafana.prometheus;
 local promDatasourceName = 'prometheus_datasource';
@@ -11,7 +18,11 @@ local promDatasource = {
   uid: '${%s}' % promDatasourceName,
 };
 
+<<<<<<< HEAD
 local sidkiqJobDurationPanel = {
+=======
+local skJobDurationPanel = {
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
   datasource: promDatasource,
   description: 'Time spent in Sidekiq jobs broken out by job name.',
   fieldConfig: {
@@ -67,7 +78,10 @@ local sidkiqJobDurationPanel = {
     },
     overrides: [],
   },
+<<<<<<< HEAD
   id: 19,
+=======
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
   links: [],
   options: {
     legend: {
@@ -149,7 +163,10 @@ local sheduledJobDurationPanel = {
     },
     overrides: [],
   },
+<<<<<<< HEAD
   id: 20,
+=======
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
   links: [],
   options: {
     legend: {
@@ -177,7 +194,11 @@ local sheduledJobDurationPanel = {
 
 local usedRSSMemoryPanel = {
   datasource: promDatasource,
+<<<<<<< HEAD
   description: 'Total RSS Memory used by process. Broken up by process type.',
+=======
+  description: 'Total RSS Memory used by process. Broken up by pid.',
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
   fieldConfig: {
     defaults: {
       color: {
@@ -231,7 +252,10 @@ local usedRSSMemoryPanel = {
     },
     overrides: [],
   },
+<<<<<<< HEAD
   id: 24,
+=======
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
   options: {
     legend: {
       calcs: [],
@@ -248,12 +272,175 @@ local usedRSSMemoryPanel = {
     prometheus.target(
       'sum(discourse_rss{instance=~"$instance",job=~"$job"}) by (pid)',
       datasource=promDatasource,
+<<<<<<< HEAD
+=======
+      legendFormat='pid: {{pid}}',
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
     ),
   ],
   title: 'Used RSS Memory',
   type: 'timeseries',
 };
 
+<<<<<<< HEAD
+=======
+local scheduledJobsPanel = {
+  datasource: promDatasource,
+  description: 'The number of scheduled jobs ran over an interval.',
+  fieldConfig: {
+    defaults: {
+      color: {
+        mode: 'palette-classic',
+      },
+      custom: {
+        axisCenteredZero: false,
+        axisColorMode: 'text',
+        axisLabel: '',
+        axisPlacement: 'auto',
+        barAlignment: 0,
+        drawStyle: 'line',
+        fillOpacity: 0,
+        gradientMode: 'none',
+        hideFrom: {
+          legend: false,
+          tooltip: false,
+          viz: false,
+        },
+        lineInterpolation: 'linear',
+        lineWidth: 1,
+        pointSize: 5,
+        scaleDistribution: {
+          type: 'linear',
+        },
+        showPoints: 'auto',
+        spanNulls: false,
+        stacking: {
+          group: 'A',
+          mode: 'none',
+        },
+        thresholdsStyle: {
+          mode: 'off',
+        },
+      },
+      mappings: [],
+      thresholds: {
+        mode: 'absolute',
+        steps: [
+          {
+            color: 'green',
+            value: null,
+          },
+          {
+            color: 'red',
+            value: 80,
+          },
+        ],
+      },
+    },
+    overrides: [],
+  },
+  options: {
+    legend: {
+      calcs: [],
+      displayMode: 'list',
+      placement: 'bottom',
+      showLegend: true,
+    },
+    tooltip: {
+      mode: 'single',
+      sort: 'none',
+    },
+  },
+  targets: [
+    prometheus.target(
+      'increase(discourse_scheduled_job_count{instance=~"$instance", job=~"$job"}[$__rate_interval])',
+      legendFormat='{{job_name}}',
+      datasource=promDatasource,
+    ),
+  ],
+  title: 'Scheduled Jobs',
+  type: 'timeseries',
+};
+
+local sidekiqJobsPanel = {
+  datasource: promDatasource,
+  description: 'The amount of sidekiq jobs ran over an interval.',
+  fieldConfig: {
+    defaults: {
+      color: {
+        mode: 'palette-classic',
+      },
+      custom: {
+        axisCenteredZero: false,
+        axisColorMode: 'text',
+        axisLabel: '',
+        axisPlacement: 'auto',
+        barAlignment: 0,
+        drawStyle: 'line',
+        fillOpacity: 0,
+        gradientMode: 'none',
+        hideFrom: {
+          legend: false,
+          tooltip: false,
+          viz: false,
+        },
+        lineInterpolation: 'linear',
+        lineWidth: 1,
+        pointSize: 5,
+        scaleDistribution: {
+          type: 'linear',
+        },
+        showPoints: 'auto',
+        spanNulls: false,
+        stacking: {
+          group: 'A',
+          mode: 'none',
+        },
+        thresholdsStyle: {
+          mode: 'off',
+        },
+      },
+      mappings: [],
+      thresholds: {
+        mode: 'absolute',
+        steps: [
+          {
+            color: 'green',
+            value: null,
+          },
+          {
+            color: 'red',
+            value: 80,
+          },
+        ],
+      },
+    },
+    overrides: [],
+  },
+  options: {
+    legend: {
+      calcs: [],
+      displayMode: 'list',
+      placement: 'bottom',
+      showLegend: true,
+    },
+    tooltip: {
+      mode: 'single',
+      sort: 'none',
+    },
+  },
+  targets: [
+    prometheus.target(
+      'increase(discourse_sidekiq_job_count{instance=~"$instance", job=~"$job"}[$__rate_interval])',
+      legendFormat='{{job_name}}',
+      datasource=promDatasource,
+    ),
+  ],
+  title: 'Sidekiq Jobs',
+  type: 'timeseries',
+};
+
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
 local v8HeapSizePanel = {
   datasource: promDatasource,
   description: 'Current heap size of V8 engine. Broken up by process type',
@@ -310,7 +497,10 @@ local v8HeapSizePanel = {
     },
     overrides: [],
   },
+<<<<<<< HEAD
   id: 26,
+=======
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
   options: {
     legend: {
       calcs: [],
@@ -327,13 +517,21 @@ local v8HeapSizePanel = {
     prometheus.target(
       'sum(discourse_v8_used_heap_size{instance=~"$instance",job=~"$job"}) by (type)',
       datasource=promDatasource,
+<<<<<<< HEAD
+=======
+      legendFormat='{{type}}',
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
     ),
   ],
   title: 'V8 Heap Size',
   type: 'timeseries',
 };
 
+<<<<<<< HEAD
 local sidekiqWorkerScore = {
+=======
+local skWorkerScore = {
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
   datasource: promDatasource,
   description: 'Current number of Sidekiq Workers.',
   fieldConfig: {
@@ -368,7 +566,10 @@ local sidekiqWorkerScore = {
     },
     overrides: [],
   },
+<<<<<<< HEAD
   id: 15,
+=======
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
   links: [],
   maxDataPoints: 100,
   options: {
@@ -439,7 +640,7 @@ local webWorkersStat = {
     },
     overrides: [],
   },
-  id: 16,
+
   links: [],
   maxDataPoints: 100,
   options: {
@@ -475,7 +676,7 @@ local webWorkersStat = {
   type: 'stat',
 };
 
-local sidekiqQueuedStat = {
+local skQueuedStat = {
   datasource: promDatasource,
   description: 'Current number of jobs in Sidekiq queue.',
   fieldConfig: {
@@ -510,7 +711,10 @@ local sidekiqQueuedStat = {
     },
     overrides: [],
   },
+<<<<<<< HEAD
   id: 17,
+=======
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
   links: [],
   maxDataPoints: 100,
   options: {
@@ -589,7 +793,11 @@ local sidekiqQueuedStat = {
           template.new(
             'job',
             promDatasource,
+<<<<<<< HEAD
             'label_values(up{}, job)',
+=======
+            query='label_values(discourse_page_views{}, job)',
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
             label='Job',
             refresh='time',
             includeAll=true,
@@ -602,6 +810,7 @@ local sidekiqQueuedStat = {
       .addPanels(
         std.flattenArrays([
           [
+<<<<<<< HEAD
             sidkiqJobDurationPanel { gridPos: { h: 7, w: 12, x: 0, y: 0 } },
             sheduledJobDurationPanel { gridPos: { h: 7, w: 12, x: 12, y: 0 } },
           ],
@@ -615,6 +824,24 @@ local sidekiqQueuedStat = {
             sidekiqWorkerScore { gridPos: { h: 6, w: 7, x: 0, y: 15 } },
             webWorkersStat { gridPos: { h: 6, w: 8, x: 7, y: 15 } },
             sidekiqQueuedStat { gridPos: { h: 6, w: 9, x: 15, y: 15 } },
+=======
+            skWorkerScore { gridPos: { h: 5, w: 8, x: 0, y: 0 } },
+            webWorkersStat { gridPos: { h: 5, w: 8, x: 8, y: 0 } },
+            skQueuedStat { gridPos: { h: 5, w: 8, x: 16, y: 0 } },
+          ],
+          [
+            scheduledJobsPanel { gridPos: { h: 6, w: 12, x: 0, y: 6 } },
+            sidekiqJobsPanel { gridPos: { h: 6, w: 12, x: 12, y: 6 } },
+          ],
+          [
+            sheduledJobDurationPanel { gridPos: { h: 6, w: 12, x: 0, y: 12 } },
+            skJobDurationPanel { gridPos: { h: 6, w: 12, x: 12, y: 12 } },
+          ],
+          //next row
+          [
+            usedRSSMemoryPanel { gridPos: { h: 6, w: 12, x: 0, y: 18 } },
+            v8HeapSizePanel { gridPos: { h: 6, w: 12, x: 12, y: 18 } },
+>>>>>>> 0d0dffe200e88646eeba059ced26823e7364e022
           ],
         ])
       ),

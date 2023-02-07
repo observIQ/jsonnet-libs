@@ -1,4 +1,5 @@
-local grafana = import 'github.com/grafana/grafonnet-lib/grafonnet/grafana.libsonnet';
+local g = (import 'grafana-builder/grafana.libsonnet');
+local grafana = (import 'grafonnet/grafana.libsonnet');
 local dashboard = grafana.dashboard;
 local template = grafana.template;
 local dashboardUid = 'clickhouse-replica';
@@ -83,12 +84,12 @@ local interserverConnectionsPanel =
         },
         editorMode: 'code',
         expr: 'ClickHouseMetrics_InterserverConnection{' + matcher + '}',
-        legendFormat: 'Interserver Connections',
+        legendFormat: 'Interserver connections',
         range: true,
         refId: 'A',
       },
     ],
-    title: 'Interserver Connections',
+    title: 'Interserver connections',
     type: 'timeseries',
   };
 local replicaQueueSizePanel =
@@ -170,12 +171,12 @@ local replicaQueueSizePanel =
         },
         editorMode: 'code',
         expr: 'ClickHouseAsyncMetrics_ReplicasMaxQueueSize{' + matcher + '}',
-        legendFormat: 'Max Queue Size',
+        legendFormat: 'Max queue size',
         range: true,
         refId: 'A',
       },
     ],
-    title: 'Replica Queue Size',
+    title: 'Replica queue size',
     type: 'timeseries',
   };
 local replicaOperationsPanel =
@@ -234,6 +235,7 @@ local replicaOperationsPanel =
             },
           ],
         },
+        unit: '/ sec',
       },
       overrides: [],
     },
@@ -257,7 +259,7 @@ local replicaOperationsPanel =
         },
         editorMode: 'code',
         expr: 'rate(ClickHouseProfileEvents_ReplicatedPartFetches{' + matcher + '}[$__rate_interval])',
-        legendFormat: 'Part Fetches',
+        legendFormat: 'Part fetches',
         range: true,
         refId: 'A',
       },
@@ -269,7 +271,7 @@ local replicaOperationsPanel =
         editorMode: 'code',
         expr: 'rate(ClickHouseProfileEvents_ReplicatedPartMerges{' + matcher + '}[$__rate_interval])',
         hide: false,
-        legendFormat: 'Part Merges',
+        legendFormat: 'Part merges',
         range: true,
         refId: 'B',
       },
@@ -281,7 +283,7 @@ local replicaOperationsPanel =
         editorMode: 'code',
         expr: 'rate(ClickHouseProfileEvents_ReplicatedPartMutations{' + matcher + '}[$__rate_interval])',
         hide: false,
-        legendFormat: 'Part Mutations',
+        legendFormat: 'Part mutations',
         range: true,
         refId: 'C',
       },
@@ -293,12 +295,12 @@ local replicaOperationsPanel =
         editorMode: 'code',
         expr: 'rate(ClickHouseProfileEvents_ReplicatedPartChecks{' + matcher + '}[$__rate_interval])',
         hide: false,
-        legendFormat: 'Part Checks',
+        legendFormat: 'Part checks',
         range: true,
         refId: 'D',
       },
     ],
-    title: 'Replica Operations',
+    title: 'Replica operations',
     type: 'timeseries',
   };
 local replicaReadOnlyPanel =
@@ -380,12 +382,12 @@ local replicaReadOnlyPanel =
         },
         editorMode: 'code',
         expr: 'ClickHouseMetrics_ReadonlyReplica{' + matcher + '}',
-        legendFormat: 'Read Only',
+        legendFormat: 'Read only',
         range: true,
         refId: 'A',
       },
     ],
-    title: 'Replica Read Only',
+    title: 'Replica read only',
     type: 'timeseries',
   };
 local zooKeeperWatchesPanel =
@@ -467,12 +469,12 @@ local zooKeeperWatchesPanel =
         },
         editorMode: 'code',
         expr: 'ClickHouseMetrics_ZooKeeperWatch{' + matcher + '}',
-        legendFormat: 'ZooKeeper Watch',
+        legendFormat: 'Zookeeper watch',
         range: true,
         refId: 'A',
       },
     ],
-    title: 'ZooKeeper Watches',
+    title: 'Zookeeper watches',
     type: 'timeseries',
   };
 local zooKeeperSessionsPanel =
@@ -554,12 +556,12 @@ local zooKeeperSessionsPanel =
         },
         editorMode: 'code',
         expr: 'ClickHouseMetrics_ZooKeeperSession{' + matcher + '}',
-        legendFormat: 'ZooKeeper Session',
+        legendFormat: 'Zookeeper session',
         range: true,
         refId: 'A',
       },
     ],
-    title: 'ZooKeeper Sessions',
+    title: 'Zookeeper sessions',
     type: 'timeseries',
   };
 local zooKeeperRequestsPanel =
@@ -641,12 +643,12 @@ local zooKeeperRequestsPanel =
         },
         editorMode: 'code',
         expr: 'ClickHouseMetrics_ZooKeeperRequest{' + matcher + '}',
-        legendFormat: 'ZooKeeper Request',
+        legendFormat: 'Zookeeper request',
         range: true,
         refId: 'A',
       },
     ],
-    title: 'ZooKeeper Requests',
+    title: 'Zookeeper requests',
     type: 'timeseries',
   };
 {
@@ -654,7 +656,7 @@ local zooKeeperRequestsPanel =
 
     'clickhouse-replica.json':
       dashboard.new(
-        'Clickhouse Replica',
+        'ClickHouse replica',
         time_from='%s' % $._config.dashboardPeriod,
         editable=false,
         tags=($._config.dashboardTags),
@@ -665,7 +667,7 @@ local zooKeeperRequestsPanel =
       )
       .addLink(grafana.link.dashboards(
         asDropdown=false,
-        title='Other clickhouse dashboards',
+        title='Other ClickHouse dashboards',
         includeVars=true,
         keepTime=true,
         tags=($._config.dashboardTags),
@@ -684,7 +686,7 @@ local zooKeeperRequestsPanel =
             name='job',
             label='job',
             datasource='$prometheus_datasource',
-            query='label_values(job)',
+            query='label_values(ClickHouseMetrics_InterserverConnection,job)',
             current='',
             refresh=2,
             includeAll=true,
@@ -696,7 +698,7 @@ local zooKeeperRequestsPanel =
             name='instance',
             label='instance',
             datasource='$prometheus_datasource',
-            query='label_values(up{job=~"$job"}, instance)',
+            query='label_values(ClickHouseMetrics_InterserverConnection{job=~"$job"}, instance)',
             current='',
             refresh=2,
             includeAll=false,

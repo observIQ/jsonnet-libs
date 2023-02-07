@@ -3,16 +3,17 @@
 Clickhouse mixin is a set of configurable, reusable and extensible alerts and dashboards that uses the [Clickhouse Exporter](https://github.com/ClickHouse/clickhouse_exporter) for Prometheus and Loki for logs (optional).
 
 The Clickhouse mixin includes the following dashboards:
-- Clickhouse Overview
-- Clickhouse Latency
-- Clickhouse Replica
+- Clickhouse overview
+- Clickhouse latency
+- Clickhouse replica
 
-## Clickhouse Overview:
+## Clickhouse overview:
 
-The Clickhouse Overview dashboard provides details on queries, memory usage, networking and error logs. To get Clickhouse error logs, [Promtail and Loki needs to be installed](https://grafana.com/docs/loki/latest/installation/) and provisioned for logs with your Grafana instance. The default Clickhouse error log path is `/var/log/clickhouse-server/clickhouse-server.err.log`.
+The Clickhouse overview dashboard provides details on queries, memory usage, networking and error logs. To get Clickhouse error logs, [Promtail and Loki needs to be installed](https://grafana.com/docs/loki/latest/installation/) and provisioned for logs with your Grafana instance. The default Clickhouse error log path is `/var/log/clickhouse-server/clickhouse-server.err.log`.
 
-![screenshot-0](/clickhouse-mixin/images/clickhouse-overview.01.png)
-![screenshot-1](/clickhouse-mixin/images/clickhouse-overview.02.png)
+![First screenshot of Clickhouse overview dashboard](https://storage.googleapis.com/grafanalabs-integration-assets/clickhouse/screenshots/clickhouse-overview.01.png)
+![Second screenshot of Clickhouse overview dashboard](https://storage.googleapis.com/grafanalabs-integration-assets/clickhouse/screenshots/clickhouse-overview.02.png)
+
 
 Clickhouse error logs are enabled by default in the `config.libsonnet` and can be removed by setting `enableLokiLogs` to `false`. Then run `make` again to regenerate the dashboard:
 
@@ -24,15 +25,15 @@ Clickhouse error logs are enabled by default in the `config.libsonnet` and can b
 }
 ```
 
-## Clickhouse Latency:
+## Clickhouse latency:
 
-The Clickhouse Latency dashboard provides details on latency metrics.
-![screenshot-2](/clickhouse-mixin/images/clickhouse-latency.01.png)
+The Clickhouse latency dashboard provides details on latency metrics.
+![Third screenshot of Clickhouse latency dashboard](https://storage.googleapis.com/grafanalabs-integration-assets/clickhouse/screenshots/clickhouse-latency.01.png)
 
-## Clickhouse Replica:
+## Clickhouse replica:
 
-The Clickhouse Latency dashboard provides details on replica metrics.
-![screenshot-3](/clickhouse-mixin/images/clickhouse-replica.01.png)
+The Clickhouse replica dashboard provides details on replica metrics.
+![Fourth screenshot of Clickhouse replica Dashboard](https://storage.googleapis.com/grafanalabs-integration-assets/clickhouse/screenshots/clickhouse-replica.01.png)
 
 ## Install tools
 

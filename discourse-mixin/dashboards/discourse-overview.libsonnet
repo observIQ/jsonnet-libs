@@ -1,8 +1,7 @@
-local grafana = import 'github.com/grafana/grafonnet-lib/grafonnet/grafana.libsonnet';
+local grafana = (import 'grafonnet/grafana.libsonnet');
 local dashboard = grafana.dashboard;
 local template = grafana.template;
 local dashboardUid = 'discourse-overview';
-local matcher = 'instance=~"$instance"';
 
 local prometheus = grafana.prometheus;
 local promDatasourceName = 'prometheus_datasource';
@@ -13,7 +12,6 @@ local promDatasource = {
 
 local overviewRow = {
   collapsed: false,
-  id: 4,
   title: 'Overview',
   type: 'row',
 };
@@ -74,7 +72,6 @@ local trafficPanel = {
     },
     overrides: [],
   },
-  id: 2,
   options: {
     legend: {
       calcs: [],
@@ -89,8 +86,9 @@ local trafficPanel = {
   },
   targets: [
     prometheus.target(
-      'sum(rate(discourse_http_requests{instance=~"$instance",job=~"$job"}[$__rate_interval])) by (api,status,verb)',
+      'sum(rate(discourse_http_requests{instance=~"$instance",job=~"$job"}[$__rate_interval])) by (status)',
       datasource=promDatasource,
+      legendFormat='{{status}}'
     ),
   ],
   title: 'Traffic by Response Code',
@@ -153,7 +151,6 @@ local activeRequests = {
     },
     overrides: [],
   },
-  id: 6,
   options: {
     legend: {
       calcs: [],
@@ -232,7 +229,6 @@ local queuedRequestsPanel = {
     },
     overrides: [],
   },
-  id: 8,
   options: {
     legend: {
       calcs: [],
@@ -247,7 +243,7 @@ local queuedRequestsPanel = {
   },
   targets: [
     prometheus.target(
-      'rate(discourse_queued_app_reqs{instance=~"$instance",job=~"$job"}[$__rate_interval])',
+      'discourse_queued_app_reqs{instance=~"$instance",job=~"$job"}',
       datasource=promDatasource,
     ),
   ],
@@ -321,7 +317,6 @@ local pageviewsPanel = {
     },
     overrides: [],
   },
-  id: 10,
   options: {
     legend: {
       calcs: [],
@@ -345,7 +340,6 @@ local pageviewsPanel = {
 };
 local latencyRow = {
   collapsed: false,
-  id: 12,
   title: 'Latency',
   type: 'row',
 };
@@ -405,7 +399,6 @@ local medianLatencyPanel = {
     },
     overrides: [],
   },
-  id: 14,
   options: {
     legend: {
       calcs: [],
@@ -422,6 +415,7 @@ local medianLatencyPanel = {
     prometheus.target(
       'sum(discourse_http_duration_seconds{quantile="0.5",action="latest",instance=~"$instance",job=~"$job"}) by (controller)',
       datasource=promDatasource,
+      legendFormat='{{controller}}',
     ),
   ],
   title: 'Latest Median Request Time',
@@ -484,7 +478,6 @@ local topicMedianPanel = {
     },
     overrides: [],
   },
-  id: 16,
   options: {
     legend: {
       calcs: [],
@@ -500,7 +493,8 @@ local topicMedianPanel = {
   targets: [
     prometheus.target(
       'sum(discourse_http_duration_seconds{quantile="0.5",controller="topics",instance=~"$instance",job=~"$job"}) by (controller)',
-      datasource=promDatasource
+      datasource=promDatasource,
+      legendFormat='{{controller}}',
     ),
   ],
   title: 'Topic Show Median Request Time',
@@ -562,7 +556,6 @@ local ninetyNinthPercentileRequestLatency = {
     },
     overrides: [],
   },
-  id: 18,
   options: {
     legend: {
       calcs: [],
@@ -576,14 +569,11 @@ local ninetyNinthPercentileRequestLatency = {
     },
   },
   targets: [
-    {
-      datasource: promDatasource,
-      editorMode: 'code',
-      expr: 'sum(discourse_http_duration_seconds{quantile="0.99",action="latest",instance=~"$instance",job=~"$job"}) by (controller)',
-      legendFormat: '__auto',
-      range: true,
-      refId: 'A',
-    },
+    prometheus.target(
+      'sum(discourse_http_duration_seconds{quantile="0.99",action="latest",instance=~"$instance",job=~"$job"}) by (controller)',
+      datasource=promDatasource,
+      legendFormat='{{controller}}',
+    ),
   ],
   title: 'Latest 99th percentile Request Time',
   type: 'timeseries',
@@ -644,7 +634,6 @@ local ninetyNinthTopicShowPercentileRequestLatency = {
     },
     overrides: [],
   },
-  id: 20,
   options: {
     legend: {
       calcs: [],
@@ -661,6 +650,7 @@ local ninetyNinthTopicShowPercentileRequestLatency = {
     prometheus.target(
       'discourse_http_duration_seconds{quantile="0.99",controller="topics",instance=~"$instance",job=~"$job"}',
       datasource=promDatasource,
+      legendFormat='{{controller}}',
     ),
   ],
   title: 'Topic Show 99th percentile Request Time',
@@ -701,7 +691,7 @@ local ninetyNinthTopicShowPercentileRequestLatency = {
             name='instance',
             label='instance',
             datasource='$prometheus_datasource',
-            query='label_values(discourse_page_views, instance)',
+            query='label_values(discourse_page_views{}, instance)',
             current='',
             refresh=2,
             includeAll=true,
@@ -710,9 +700,9 @@ local ninetyNinthTopicShowPercentileRequestLatency = {
             sort=1
           ),
           template.new(
-            'job',
-            promDatasource,
-            'label_values(up{}, job)',
+            name='job',
+            datasource=promDatasource,
+            query='label_values(discourse_page_views{}, job)',
             label='Job',
             refresh='time',
             includeAll=true,
@@ -726,18 +716,18 @@ local ninetyNinthTopicShowPercentileRequestLatency = {
         std.flattenArrays([
           [
             overviewRow { gridPos: { h: 1, w: 24, x: 0, y: 0 } },
-            trafficPanel { gridPos: { h: 8, w: 24, x: 0, y: 1 } },
-            activeRequests { gridPos: { h: 8, w: 12, x: 0, y: 9 } },
-            queuedRequestsPanel { gridPos: { h: 8, w: 12, x: 12, y: 9 } },
-            pageviewsPanel { gridPos: { h: 9, w: 24, x: 0, y: 18 } },
+            trafficPanel { gridPos: { h: 6, w: 12, x: 0, y: 1 } },
+            activeRequests { gridPos: { h: 6, w: 12, x: 12, y: 1 } },
+            queuedRequestsPanel { gridPos: { h: 6, w: 12, x: 0, y: 7 } },
+            pageviewsPanel { gridPos: { h: 6, w: 12, x: 12, y: 7 } },
           ],
           // next row
           [
-            latencyRow { gridPos: { h: 1, w: 24, x: 0, y: 25 } },
-            medianLatencyPanel { gridPos: { h: 8, w: 12, x: 0, y: 26 } },
-            topicMedianPanel { gridPos: { h: 8, w: 12, x: 12, y: 26 } },
-            ninetyNinthPercentileRequestLatency { gridPos: { h: 8, w: 12, x: 0, y: 34 } },
-            ninetyNinthTopicShowPercentileRequestLatency { gridPos: { h: 8, w: 12, x: 12, y: 34 } },
+            latencyRow { gridPos: { h: 1, w: 24, x: 0, y: 12 } },
+            medianLatencyPanel { gridPos: { h: 6, w: 12, x: 0, y: 13 } },
+            topicMedianPanel { gridPos: { h: 6, w: 12, x: 12, y: 13 } },
+            ninetyNinthPercentileRequestLatency { gridPos: { h: 6, w: 12, x: 0, y: 18 } },
+            ninetyNinthTopicShowPercentileRequestLatency { gridPos: { h: 6, w: 12, x: 12, y: 18 } },
           ],
         ])
       ),
