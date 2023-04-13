@@ -13,7 +13,6 @@ local promDatasource = {
   uid: '${%s}' % promDatasourceName,
 };
 
-
 local lokiDatasource = {
   uid: '${%s}' % lokiDatasourceName,
 };
@@ -751,7 +750,6 @@ local timedoutQueryCountPanel = {
     },
   },
 };
-
 
 {
   grafanaDashboards+:: {

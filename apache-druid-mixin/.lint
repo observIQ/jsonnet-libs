@@ -10,6 +10,7 @@ exclusions:
   panel-units-rule:
     reason: "Custom units are used for better user experience in these panels"
     entries:
+    - panel: "Error logs"
     - panel: "Total query count"
     - panel: "Successful query count"
     - panel: "Failed query count"
