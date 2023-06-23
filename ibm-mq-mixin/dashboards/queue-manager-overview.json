@@ -1063,7 +1063,7 @@
             "refId": "A"
           }
         ],
-        "title": "Expirations",
+        "title": "Expired messages",
         "type": "timeseries"
       },
       {

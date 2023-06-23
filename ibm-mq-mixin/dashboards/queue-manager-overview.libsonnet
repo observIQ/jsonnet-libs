@@ -785,7 +785,7 @@ local commitsPanel = {
   },
 };
 
-local expirationsPanel = {
+local expiredMessagesPanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
@@ -795,7 +795,7 @@ local expirationsPanel = {
     ),
   ],
   type: 'timeseries',
-  title: 'Expirations',
+  title: 'Expired messages',
   description: 'The expired messages of the queue manager.',
   fieldConfig: {
     defaults: {
@@ -1267,7 +1267,7 @@ local errorLogsPanel = {
             publishThroughputPanel { gridPos: { h: 8, w: 8, x: 8, y: 24 } },
             publishedMessagesPanel { gridPos: { h: 8, w: 8, x: 16, y: 24 } },
             commitsPanel { gridPos: { h: 8, w: 8, x: 0, y: 32 } },
-            expirationsPanel { gridPos: { h: 8, w: 8, x: 8, y: 32 } },
+            expiredMessagesPanel { gridPos: { h: 8, w: 8, x: 8, y: 32 } },
             queueOperationsPanel { gridPos: { h: 8, w: 8, x: 16, y: 32 } },
             logsRow { gridPos: { h: 1, w: 24, x: 0, y: 40 } },
             logLatencyPanel { gridPos: { h: 8, w: 12, x: 0, y: 41 } },
