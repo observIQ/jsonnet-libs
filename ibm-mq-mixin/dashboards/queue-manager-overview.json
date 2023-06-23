@@ -55,10 +55,6 @@
                 {
                   "color": "green",
                   "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
                 }
               ]
             }
@@ -121,10 +117,6 @@
                 {
                   "color": "green",
                   "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
                 }
               ]
             }
@@ -187,10 +179,6 @@
                 {
                   "color": "green",
                   "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
                 }
               ]
             }
@@ -427,7 +415,7 @@
             },
             "editorMode": "code",
             "expr": "(ibmmq_qmgr_ram_total_estimate_for_queue_manager_bytes{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"}/ibmmq_qmgr_ram_total_bytes{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"}) * 100",
-            "legendFormat": "{{job}} - {{mq_cluster}}: {{qmgr}}",
+            "legendFormat": "{{mq_cluster}}: {{qmgr}}",
             "range": true,
             "refId": "A"
           }
@@ -589,6 +577,7 @@
                 "qmgr": 8
               },
               "renameByName": {
+                "Time": "",
                 "Value": "Uptime",
                 "ibmmq_qmgr_status{description=\"-\", hostname=\"keith-ibm-mq-1804-2-test\", instance=\"localhost:9157\", job=\"integrations/ibm_mq\", mq_cluster=\"<mq_cluster>\", platform=\"UNIX\", qmgr=\"QM1\"}": "Status",
                 "mq_cluster": "MQ cluster",
@@ -599,7 +588,7 @@
           {
             "id": "reduce",
             "options": {
-              "includeTimeField": false,
+              "includeTimeField": true,
               "mode": "reduceFields",
               "reducers": [
                 "lastNotNull"
@@ -695,7 +684,7 @@
             },
             "editorMode": "code",
             "expr": "ibmmq_qmgr_queue_manager_file_system_in_use_bytes{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"}",
-            "legendFormat": "{{job}} - {{mq_cluster}}: {{qmgr}}",
+            "legendFormat": "{{mq_cluster}}: {{qmgr}}",
             "range": true,
             "refId": "A"
           }
@@ -789,7 +778,7 @@
             },
             "editorMode": "code",
             "expr": "ibmmq_qmgr_published_to_subscribers_bytes{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"}",
-            "legendFormat": "{{job}} - {{mq_cluster}}: {{qmgr}}",
+            "legendFormat": "{{mq_cluster}}: {{qmgr}}",
             "range": true,
             "refId": "A"
           }
@@ -883,7 +872,7 @@
             },
             "editorMode": "code",
             "expr": "ibmmq_qmgr_published_to_subscribers_message_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"}",
-            "legendFormat": "{{job}} - {{mq_cluster}}: {{qmgr}}",
+            "legendFormat": "{{mq_cluster}}: {{qmgr}}",
             "range": true,
             "refId": "A"
           }
@@ -976,7 +965,7 @@
             },
             "editorMode": "code",
             "expr": "ibmmq_qmgr_commit_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"}",
-            "legendFormat": "{{job}} - {{mq_cluster}}: {{qmgr}}",
+            "legendFormat": "{{mq_cluster}}: {{qmgr}}",
             "range": true,
             "refId": "A"
           }
@@ -1069,7 +1058,7 @@
             },
             "editorMode": "code",
             "expr": "ibmmq_qmgr_expired_message_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"}",
-            "legendFormat": "{{job}} - {{mq_cluster}}: {{qmgr}}",
+            "legendFormat": "{{mq_cluster}}: {{qmgr}}",
             "range": true,
             "refId": "A"
           }
@@ -1133,7 +1122,32 @@
               ]
             }
           },
-          "overrides": []
+          "overrides": [
+            {
+              "__systemRef": "hideSeriesFrom",
+              "matcher": {
+                "id": "byNames",
+                "options": {
+                  "mode": "exclude",
+                  "names": [
+                    "MQPUT/MQPUT1"
+                  ],
+                  "prefix": "All except:",
+                  "readOnly": true
+                }
+              },
+              "properties": [
+                {
+                  "id": "custom.hideFrom",
+                  "value": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": true
+                  }
+                }
+              ]
+            }
+          ]
         },
         "gridPos": {
           "h": 8,
@@ -1161,8 +1175,8 @@
               "uid": "${prometheus_datasource}"
             },
             "editorMode": "code",
-            "expr": "sum by (mq_cluster, qmgr) (ibmmq_queue_mqset{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
-            "legendFormat": "MQSET",
+            "expr": "sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqset{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
+            "legendFormat": "{{mq_cluster}} - {{qmgr}} - MQSET",
             "range": true,
             "refId": "A"
           },
@@ -1172,9 +1186,9 @@
               "uid": "${prometheus_datasource}"
             },
             "editorMode": "code",
-            "expr": "sum by (mq_cluster, qmgr) (ibmmq_queue_mqinq_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
+            "expr": "sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqinq_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
             "hide": false,
-            "legendFormat": "MQINQ",
+            "legendFormat": "{{mq_cluster}} - {{qmgr}} - MQINQ",
             "range": true,
             "refId": "B"
           },
@@ -1184,9 +1198,9 @@
               "uid": "${prometheus_datasource}"
             },
             "editorMode": "code",
-            "expr": "sum by (mq_cluster, qmgr) (ibmmq_queue_mqget_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
+            "expr": "sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqget_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
             "hide": false,
-            "legendFormat": "MQGET",
+            "legendFormat": "{{mq_cluster}} - {{qmgr}} - MQGET",
             "range": true,
             "refId": "C"
           },
@@ -1196,10 +1210,10 @@
               "uid": "${prometheus_datasource}"
             },
             "editorMode": "code",
-            "expr": "sum by (mq_cluster, qmgr) (ibmmq_queue_mqopen_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
+            "expr": "sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqopen_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
             "hide": false,
             "instant": false,
-            "legendFormat": "MQOPEN",
+            "legendFormat": "{{mq_cluster}} - {{qmgr}} - MQOPEN",
             "range": true,
             "refId": "D"
           },
@@ -1209,10 +1223,10 @@
               "uid": "${prometheus_datasource}"
             },
             "editorMode": "code",
-            "expr": "sum by (mq_cluster, qmgr) (ibmmq_queue_mqclose_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
+            "expr": "sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqclose_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
             "hide": false,
             "instant": false,
-            "legendFormat": "MQCLOSE",
+            "legendFormat": "{{mq_cluster}} - {{qmgr}} - MQCLOSE",
             "range": true,
             "refId": "E"
           },
@@ -1222,10 +1236,10 @@
               "uid": "${prometheus_datasource}"
             },
             "editorMode": "code",
-            "expr": "sum by (mq_cluster, qmgr) (ibmmq_queue_mqput_mqput1_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
+            "expr": "sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqput_mqput1_count{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"})",
             "hide": false,
             "instant": false,
-            "legendFormat": "MQPUT/MQPUT1",
+            "legendFormat": "{{mq_cluster}} - {{qmgr}} - MQPUT/MQPUT1",
             "range": true,
             "refId": "F"
           }
@@ -1333,7 +1347,7 @@
             "editorMode": "code",
             "expr": "ibmmq_qmgr_log_write_latency_seconds{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"}",
             "instant": false,
-            "legendFormat": "{{job}} - {{mq_cluster}}: {{qmgr}}",
+            "legendFormat": "{{mq_cluster}}: {{qmgr}}",
             "range": true,
             "refId": "A"
           }
@@ -1428,7 +1442,7 @@
             "editorMode": "code",
             "expr": "ibmmq_qmgr_log_in_use_bytes{mq_cluster=~\"$mq_cluster\", qmgr=~\"$qmgr\", job=~\"$job\"}",
             "instant": false,
-            "legendFormat": "{{job}} - {{mq_cluster}}: {{qmgr}}",
+            "legendFormat": "{{mq_cluster}}: {{qmgr}}",
             "range": true,
             "refId": "A"
           }
@@ -1478,13 +1492,15 @@
     "refresh": "",
     "schemaVersion": 38,
     "style": "dark",
-    "tags": [],
+    "tags": [
+      "ibm-mq-integration"
+    ],
     "templating": {
       "list": [
         {
           "allValue": ".+",
           "current": {
-            "selected": true,
+            "selected": false,
             "text": [
               "grafanacloud-keithschmitty-prom"
             ],
@@ -1508,8 +1524,12 @@
         {
           "current": {
             "selected": false,
-            "text": "grafanacloud-keithschmitty-logs",
-            "value": "grafanacloud-keithschmitty-logs"
+            "text": [
+              "grafanacloud-keithschmitty-logs"
+            ],
+            "value": [
+              "grafanacloud-keithschmitty-logs"
+            ]
           },
           "hide": 0,
           "includeAll": false,
@@ -1518,6 +1538,7 @@
           "name": "prometheus_logs",
           "options": [],
           "query": "loki",
+          "queryValue": "",
           "refresh": 1,
           "regex": "",
           "skipUrlSync": false,
@@ -1526,7 +1547,7 @@
         {
           "allValue": ".+",
           "current": {
-            "selected": true,
+            "selected": false,
             "text": [
               "integrations/ibm_mq"
             ],
@@ -1558,7 +1579,7 @@
         {
           "allValue": ".+",
           "current": {
-            "selected": true,
+            "selected": false,
             "text": [
               "<mq_cluster>"
             ],
@@ -1589,7 +1610,7 @@
         },
         {
           "current": {
-            "selected": true,
+            "selected": false,
             "text": [
               "QM1"
             ],
@@ -1621,13 +1642,13 @@
       ]
     },
     "time": {
-      "from": "now-3h",
+      "from": "now-15m",
       "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "Queue Manager overview",
     "uid": "d9cc0ffb-2467-490d-b12d-2dfb06e86239",
-    "version": 8,
+    "version": 16,
     "weekStart": ""
   }

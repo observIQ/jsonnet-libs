@@ -42,10 +42,6 @@ local activeListenersPanel = {
             color: 'green',
             value: null,
           },
-          {
-            color: 'red',
-            value: 80,
-          },
         ],
       },
     },
@@ -92,10 +88,6 @@ local activeConnectionsPanel = {
             color: 'green',
             value: null,
           },
-          {
-            color: 'red',
-            value: 80,
-          },
         ],
       },
     },
@@ -141,10 +133,6 @@ local queuesPanel = {
           {
             color: 'green',
             value: null,
-          },
-          {
-            color: 'red',
-            value: 80,
           },
         ],
       },
@@ -258,7 +246,7 @@ local estimatedMemoryUtilizationPanel = {
     prometheus.target(
       '(ibmmq_qmgr_ram_total_estimate_for_queue_manager_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}/ibmmq_qmgr_ram_total_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}) * 100',
       datasource=promDatasource,
-      legendFormat='{{job}} - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}}: {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -461,6 +449,7 @@ local queueManagerStatusPanel = {
           qmgr: 8,
         },
         renameByName: {
+          Time: '',
           Value: 'Uptime',
           'ibmmq_qmgr_status{description="-", hostname="keith-ibm-mq-1804-2-test", instance="localhost:9157", job="integrations/ibm_mq", mq_cluster="<mq_cluster>", platform="UNIX", qmgr="QM1"}': 'Status',
           mq_cluster: 'MQ cluster',
@@ -471,7 +460,7 @@ local queueManagerStatusPanel = {
     {
       id: 'reduce',
       options: {
-        includeTimeField: false,
+        includeTimeField: true,
         mode: 'reduceFields',
         reducers: [
           'lastNotNull',
@@ -487,7 +476,7 @@ local diskUsagePanel = {
     prometheus.target(
       'ibmmq_qmgr_queue_manager_file_system_in_use_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{job}} - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}}: {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -566,7 +555,7 @@ local publishThroughputPanel = {
     prometheus.target(
       'ibmmq_qmgr_published_to_subscribers_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{job}} - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}}: {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -645,7 +634,7 @@ local publishedMessagesPanel = {
     prometheus.target(
       'ibmmq_qmgr_published_to_subscribers_message_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{job}} - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}}: {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -724,7 +713,7 @@ local commitsPanel = {
     prometheus.target(
       'ibmmq_qmgr_commit_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{job}} - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}}: {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -802,7 +791,7 @@ local expirationsPanel = {
     prometheus.target(
       'ibmmq_qmgr_expired_message_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{job}} - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}}: {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -878,34 +867,34 @@ local queueOperationsPanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'sum by (mq_cluster, qmgr) (ibmmq_queue_mqset{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
+      'sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqset{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
       datasource=promDatasource,
-      legendFormat='MQSET',
+      legendFormat='{{mq_cluster}} - {{qmgr}} - MQSET',
     ),
     prometheus.target(
-      'sum by (mq_cluster, qmgr) (ibmmq_queue_mqinq_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
+      'sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqinq_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
       datasource=promDatasource,
-      legendFormat='MQINQ',
+      legendFormat='{{mq_cluster}} - {{qmgr}} - MQINQ',
     ),
     prometheus.target(
-      'sum by (mq_cluster, qmgr) (ibmmq_queue_mqget_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
+      'sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqget_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
       datasource=promDatasource,
-      legendFormat='MQGET',
+      legendFormat='{{mq_cluster}} - {{qmgr}} - MQGET',
     ),
     prometheus.target(
-      'sum by (mq_cluster, qmgr) (ibmmq_queue_mqopen_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
+      'sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqopen_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
       datasource=promDatasource,
-      legendFormat='MQOPEN',
+      legendFormat='{{mq_cluster}} - {{qmgr}} - MQOPEN',
     ),
     prometheus.target(
-      'sum by (mq_cluster, qmgr) (ibmmq_queue_mqclose_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
+      'sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqclose_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
       datasource=promDatasource,
-      legendFormat='MQCLOSE',
+      legendFormat='{{mq_cluster}} - {{qmgr}} - MQCLOSE',
     ),
     prometheus.target(
-      'sum by (mq_cluster, qmgr) (ibmmq_queue_mqput_mqput1_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
+      'sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqput_mqput1_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
       datasource=promDatasource,
-      legendFormat='MQPUT/MQPUT1',
+      legendFormat='{{mq_cluster}} - {{qmgr}} - MQPUT/MQPUT1',
     ),
   ],
   type: 'timeseries',
@@ -961,7 +950,32 @@ local queueOperationsPanel = {
         ],
       },
     },
-    overrides: [],
+    overrides: [
+      {
+        __systemRef: 'hideSeriesFrom',
+        matcher: {
+          id: 'byNames',
+          options: {
+            mode: 'exclude',
+            names: [
+              'MQPUT/MQPUT1',
+            ],
+            prefix: 'All except:',
+            readOnly: true,
+          },
+        },
+        properties: [
+          {
+            id: 'custom.hideFrom',
+            value: {
+              legend: false,
+              tooltip: false,
+              viz: true,
+            },
+          },
+        ],
+      },
+    ],
   },
   options: {
     legend: {
@@ -991,7 +1005,7 @@ local logLatencyPanel = {
     prometheus.target(
       'ibmmq_qmgr_log_write_latency_seconds{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{job}} - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}}: {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -1070,7 +1084,7 @@ local logUsagePanel = {
     prometheus.target(
       'ibmmq_qmgr_log_in_use_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{job}} - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}}: {{qmgr}}',
     ),
   ],
   type: 'timeseries',
