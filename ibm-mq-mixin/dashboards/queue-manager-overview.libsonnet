@@ -689,7 +689,6 @@ local publishedMessagesPanel = {
           },
         ],
       },
-      unit: 'messages',
     },
     overrides: [],
   },

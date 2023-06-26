@@ -840,8 +840,7 @@
                   "value": 80
                 }
               ]
-            },
-            "unit": "messages"
+            }
           },
           "overrides": []
         },
