@@ -607,6 +607,13 @@ local subscriptionStatusPanel = {
         description='',
         uid=dashboardUid,
       )
+      .addLink(grafana.link.dashboards(
+        asDropdown=false,
+        title='ibmmq dashboard links',
+        includeVars=true,
+        keepTime=true,
+        tags=($._config.dashboardTags),
+      ))
 
       .addTemplates(
         [

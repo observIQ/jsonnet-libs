@@ -19,7 +19,22 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 219,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [
+        "ibm-mq-integration"
+      ],
+      "targetBlank": false,
+      "title": "ibmmq dashboard links",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
   "liveNow": false,
   "panels": [
     {
@@ -746,7 +761,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "<mq_cluster>",
           "value": "<mq_cluster>"
         },
@@ -773,7 +788,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "QM1",
           "value": "QM1"
         },
@@ -863,13 +878,13 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Topics overview",
   "uid": "b7cb948e-ff1a-4ed3-9dd2-33ebecae26f0",
-  "version": 38,
+  "version": 39,
   "weekStart": ""
 }
