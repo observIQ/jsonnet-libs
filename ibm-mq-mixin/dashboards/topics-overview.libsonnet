@@ -24,7 +24,7 @@ local topicMessagesReceivedPanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibmmq_topic_messages_received{job=~"$job",mq_cluster=~"$cluster",qmgr=~"$qmgr",topic=~"$topic"}',
+      'ibmmq_topic_messages_received{job=~"$job",mq_cluster=~"$mq_cluster",qmgr=~"$qmgr",topic=~"$topic"}',
       datasource=promDatasource,
       legendFormat='{{topic}}',
     ),
@@ -100,7 +100,7 @@ local timeSinceLastMessagePanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibmmq_topic_time_since_msg_received{job=~"$job",mq_cluster=~"$cluster",qmgr=~"$qmgr",topic=~"$topic"}',
+      'ibmmq_topic_time_since_msg_received{job=~"$job",mq_cluster=~"$mq_cluster",qmgr=~"$qmgr",topic=~"$topic"}',
       datasource=promDatasource,
       legendFormat='{{topic}}',
     ),
@@ -175,7 +175,7 @@ local topicSubscribersPanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibmmq_topic_subscriber_count{job=~"$job",mq_cluster=~"$cluster",qmgr=~"$qmgr",topic=~"$topic"}',
+      'ibmmq_topic_subscriber_count{job=~"$job",mq_cluster=~"$mq_cluster",qmgr=~"$qmgr",topic=~"$topic"}',
       datasource=promDatasource,
       legendFormat='{{topic}}',
     ),
@@ -251,7 +251,7 @@ local topicPublishersPanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibmmq_topic_publisher_count{job=~"$job",mq_cluster=~"$cluster",qmgr=~"$qmgr",topic=~"$topic"}',
+      'ibmmq_topic_publisher_count{job=~"$job",mq_cluster=~"$mq_cluster",qmgr=~"$qmgr",topic=~"$topic"}',
       datasource=promDatasource,
       legendFormat='{{topic}}',
     ),
@@ -335,7 +335,7 @@ local subscriptionMessagesReceivedPanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibmmq_subscription_messsages_received{job=~"$job",mq_cluster=~"$cluster",qmgr=~"$qmgr",subscription=~"$subscription"}',
+      'ibmmq_subscription_messsages_received{job=~"$job",mq_cluster=~"$mq_cluster",qmgr=~"$qmgr",subscription=~"$subscription"}',
       datasource=promDatasource,
       legendFormat='{{subscription}}',
     ),
@@ -412,7 +412,7 @@ local subscriptionStatusPanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibmmq_subscription_time_since_message_published{job=~"$job",mq_cluster=~"$cluster",qmgr=~"$qmgr",subscription=~"$subscription"}',
+      'ibmmq_subscription_time_since_message_published{job=~"$job",mq_cluster=~"$mq_cluster",qmgr=~"$qmgr",subscription=~"$subscription"}',
       datasource=promDatasource,
       legendFormat='{{label_name}}',
       format='table',
@@ -629,9 +629,9 @@ local subscriptionStatusPanel = {
             sort=0
           ),
           template.new(
-            'cluster',
+            'mq_cluster',
             promDatasource,
-            'label_values(ibmmq_topic_messages_received,mq_cluster)',
+            'label_values(ibmmq_topic_messages_received{job=~"$job"},mq_cluster)',
             label='MQ cluster',
             refresh=1,
             includeAll=false,
@@ -642,7 +642,7 @@ local subscriptionStatusPanel = {
           template.new(
             'qmgr',
             promDatasource,
-            'label_values(ibmmq_topic_messages_received,qmgr)',
+            'label_values(ibmmq_topic_messages_received{mq_cluster=~"$mq_cluster"},qmgr)',
             label='Queue manager',
             refresh=1,
             includeAll=false,
@@ -653,7 +653,7 @@ local subscriptionStatusPanel = {
           template.new(
             'topic',
             promDatasource,
-            'label_values(ibmmq_topic_subscriber_count{topic!~"SYSTEM.*|\\$SYS.*|"},topic)',
+            'label_values(ibmmq_topic_subscriber_count{qmgr=~"$qmgr",topic!~"SYSTEM.*|\\$SYS.*|"},topic)',
             label='Topic',
             refresh=1,
             includeAll=true,
@@ -664,7 +664,7 @@ local subscriptionStatusPanel = {
           template.new(
             'subscription',
             promDatasource,
-            'label_values(ibmmq_subscription_messsages_received{subscription!~"SYSTEM.*|"},subscription)',
+            'label_values(ibmmq_subscription_messsages_received{qmgr=~"$qmgr",subscription!~"SYSTEM.*|"},subscription)',
             label='Subscription',
             refresh=1,
             includeAll=true,
