@@ -39,8 +39,12 @@ local activeListenersPanel = {
         mode: 'absolute',
         steps: [
           {
-            color: 'green',
+            color: 'red',
             value: null,
+          },
+          {
+            color: 'green',
+            value: 1,
           },
         ],
       },
@@ -85,8 +89,12 @@ local activeConnectionsPanel = {
         mode: 'absolute',
         steps: [
           {
-            color: 'green',
+            color: 'red',
             value: null,
+          },
+          {
+            color: 'green',
+            value: 1,
           },
         ],
       },
@@ -131,8 +139,12 @@ local queuesPanel = {
         mode: 'absolute',
         steps: [
           {
-            color: 'green',
+            color: 'red',
             value: null,
+          },
+          {
+            color: 'green',
+            value: 1,
           },
         ],
       },
@@ -160,14 +172,14 @@ local cpuUsagePanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibmmq_qmgr_user_cpu_time_percentage{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"} * 100',
+      'ibmmq_qmgr_user_cpu_time_percentage{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='user - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='user - {{mq_cluster}} - {{qmgr}}',
     ),
     prometheus.target(
-      'ibmmq_qmgr_system_cpu_time_percentage{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"} * 100',
+      'ibmmq_qmgr_system_cpu_time_percentage{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='system - {{mq_cluster}}: {{qmgr}}',
+      legendFormat='system - {{mq_cluster}} - {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -246,7 +258,7 @@ local estimatedMemoryUtilizationPanel = {
     prometheus.target(
       '(ibmmq_qmgr_ram_total_estimate_for_queue_manager_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}/ibmmq_qmgr_ram_total_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}) * 100',
       datasource=promDatasource,
-      legendFormat='{{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}} - {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -325,12 +337,13 @@ local queueManagerStatusPanel = {
     prometheus.target(
       'ibmmq_qmgr_uptime{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
+      legendFormat='Uptime',
       format='table',
     ),
     prometheus.target(
       'ibmmq_qmgr_status{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='',
+      legendFormat='Status',
     ),
   ],
   type: 'table',
@@ -428,6 +441,7 @@ local queueManagerStatusPanel = {
       id: 'organize',
       options: {
         excludeByName: {
+          Time: true,
           __name__: true,
           description: true,
           hostname: true,
@@ -451,6 +465,7 @@ local queueManagerStatusPanel = {
         renameByName: {
           Time: '',
           Value: 'Uptime',
+          'ibmmq_qmgr_status{description="-", hostname="ibm-mq-2", instance="localhost:9157", job="integrations/ibm_mq", mq_cluster="<mq_cluster>", platform="UNIX", qmgr="NEWYORK"}': 'Status',
           'ibmmq_qmgr_status{description="-", hostname="keith-ibm-mq-1804-2-test", instance="localhost:9157", job="integrations/ibm_mq", mq_cluster="<mq_cluster>", platform="UNIX", qmgr="QM1"}': 'Status',
           mq_cluster: 'MQ cluster',
           qmgr: 'Queue manager',
@@ -476,7 +491,7 @@ local diskUsagePanel = {
     prometheus.target(
       'ibmmq_qmgr_queue_manager_file_system_in_use_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}} - {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -555,7 +570,7 @@ local publishThroughputPanel = {
     prometheus.target(
       'ibmmq_qmgr_published_to_subscribers_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}} - {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -634,7 +649,7 @@ local publishedMessagesPanel = {
     prometheus.target(
       'ibmmq_qmgr_published_to_subscribers_message_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}} - {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -683,10 +698,6 @@ local publishedMessagesPanel = {
             color: 'green',
             value: null,
           },
-          {
-            color: 'red',
-            value: 80,
-          },
         ],
       },
     },
@@ -712,7 +723,7 @@ local commitsPanel = {
     prometheus.target(
       'ibmmq_qmgr_commit_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}} - {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -790,7 +801,7 @@ local expiredMessagesPanel = {
     prometheus.target(
       'ibmmq_qmgr_expired_message_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}} - {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -866,7 +877,7 @@ local queueOperationsPanel = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqset{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
+      'sum by (mq_cluster, qmgr, job) (ibmmq_queue_mqset_count{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"})',
       datasource=promDatasource,
       legendFormat='{{mq_cluster}} - {{qmgr}} - MQSET',
     ),
@@ -957,7 +968,7 @@ local queueOperationsPanel = {
           options: {
             mode: 'exclude',
             names: [
-              'MQPUT/MQPUT1',
+              'INVENTORY - LONDON - MQINQ',
             ],
             prefix: 'All except:',
             readOnly: true,
@@ -1004,7 +1015,7 @@ local logLatencyPanel = {
     prometheus.target(
       'ibmmq_qmgr_log_write_latency_seconds{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}} - {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -1083,7 +1094,7 @@ local logUsagePanel = {
     prometheus.target(
       'ibmmq_qmgr_log_in_use_bytes{mq_cluster=~"$mq_cluster", qmgr=~"$qmgr", job=~"$job"}',
       datasource=promDatasource,
-      legendFormat='{{mq_cluster}}: {{qmgr}}',
+      legendFormat='{{mq_cluster}} - {{qmgr}}',
     ),
   ],
   type: 'timeseries',
@@ -1162,7 +1173,7 @@ local errorLogsPanel = {
     {
       datasource: lokiDatasource,
       editorMode: 'code',
-      expr: '{job=~"$job"} |= ``',
+      expr: '{job=~"$job", filename=~"/var/mqm/qmgrs/$qmgr/errors/.*LOG"} |= ``',
       queryType: 'range',
       refId: 'A',
     },
@@ -1242,7 +1253,7 @@ local errorLogsPanel = {
             template.new(
               'qmgr',
               promDatasource,
-              'label_values(ibmmq_topic_messages_received,qmgr)',
+              'label_values(ibmmq_topic_messages_received{mq_cluster=~"$mq_cluster"},qmgr)',
               label='Queue manager',
               refresh=1,
               includeAll=true,
