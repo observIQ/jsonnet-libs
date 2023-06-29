@@ -421,12 +421,7 @@ local queueManagerStatusPanel = {
     },
     frameIndex: 1,
     showHeader: true,
-    sortBy: [
-      {
-        desc: false,
-        displayName: 'ibmmq_qmgr_status{description="-", hostname="keith-ibm-mq-1804-2-test", instance="localhost:9157", job="integrations/ibm_mq", mq_cluster="<mq_cluster>", platform="UNIX", qmgr="QM1"}',
-      },
-    ],
+    sortBy: [],
   },
   pluginVersion: '10.0.1-cloud.3.f250259e',
   transformations: [
