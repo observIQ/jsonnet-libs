@@ -370,10 +370,6 @@ local queueManagerStatusPanel = {
             color: 'green',
             value: null,
           },
-          {
-            color: 'red',
-            value: 80,
-          },
         ],
       },
     },
@@ -470,7 +466,7 @@ local queueManagerStatusPanel = {
     {
       id: 'reduce',
       options: {
-        includeTimeField: true,
+        includeTimeField: false,
         mode: 'reduceFields',
         reducers: [
           'lastNotNull',
@@ -765,7 +761,6 @@ local commitsPanel = {
         steps: [
           {
             color: 'green',
-            value: null,
           },
           {
             color: 'red',
@@ -843,7 +838,6 @@ local expiredMessagesPanel = {
         steps: [
           {
             color: 'green',
-            value: null,
           },
           {
             color: 'red',
@@ -946,7 +940,6 @@ local queueOperationsPanel = {
         steps: [
           {
             color: 'green',
-            value: null,
           },
           {
             color: 'red',
@@ -1057,7 +1050,6 @@ local logLatencyPanel = {
         steps: [
           {
             color: 'green',
-            value: null,
           },
           {
             color: 'red',
@@ -1136,7 +1128,6 @@ local logUsagePanel = {
         steps: [
           {
             color: 'green',
-            value: null,
           },
           {
             color: 'red',
@@ -1168,7 +1159,7 @@ local errorLogsPanel = {
     {
       datasource: lokiDatasource,
       editorMode: 'code',
-      expr: '{job=~"$job", filename=~"/var/mqm/qmgrs/$qmgr/errors/.*LOG"} |= ``',
+      expr: '{job=~"$job", filename=~"/var/mqm/qmgrs/.*/errors/.*LOG", qmgr=~"$qmgr"} |= ``',
       queryType: 'range',
       refId: 'A',
     },
