@@ -72,7 +72,7 @@ local cacheHitRatePanel = {
     showThresholdLabels: false,
     showThresholdMarkers: true,
   },
-  pluginVersion: '10.0.3-cloud.3.cec3ab0e',
+  pluginVersion: '10.0.3-cloud.4.aed62623',
   transparent: true,
 };
 
@@ -121,7 +121,7 @@ local frontendRequestsPanel = {
     },
     textMode: 'auto',
   },
-  pluginVersion: '10.0.3-cloud.3.cec3ab0e',
+  pluginVersion: '10.0.3-cloud.4.aed62623',
   transparent: true,
 };
 
@@ -170,7 +170,7 @@ local backendRequestsPanel = {
     },
     textMode: 'auto',
   },
-  pluginVersion: '10.0.3-cloud.3.cec3ab0e',
+  pluginVersion: '10.0.3-cloud.4.aed62623',
   transparent: true,
 };
 
@@ -219,7 +219,7 @@ local sessionsRatePanel = {
     },
     textMode: 'auto',
   },
-  pluginVersion: '10.0.3-cloud.3.cec3ab0e',
+  pluginVersion: '10.0.3-cloud.4.aed62623',
   transparent: true,
 };
 
@@ -268,7 +268,7 @@ local cacheHitsPanel = {
     },
     textMode: 'auto',
   },
-  pluginVersion: '10.0.3-cloud.3.cec3ab0e',
+  pluginVersion: '10.0.3-cloud.4.aed62623',
   transparent: true,
 };
 
@@ -317,7 +317,7 @@ local cacheHitPassPanel = {
     },
     textMode: 'auto',
   },
-  pluginVersion: '10.0.3-cloud.3.cec3ab0e',
+  pluginVersion: '10.0.3-cloud.4.aed62623',
   transparent: true,
 };
 
@@ -366,7 +366,7 @@ local sessionQueueLengthPanel = {
     },
     textMode: 'auto',
   },
-  pluginVersion: '10.0.3-cloud.3.cec3ab0e',
+  pluginVersion: '10.0.3-cloud.4.aed62623',
   transparent: true,
 };
 
@@ -415,7 +415,7 @@ local poolsPanel = {
     },
     textMode: 'auto',
   },
-  pluginVersion: '10.0.3-cloud.3.cec3ab0e',
+  pluginVersion: '10.0.3-cloud.4.aed62623',
   transparent: true,
 };
 
@@ -1001,6 +1001,7 @@ local networkPanel = {
         steps: [
           {
             color: 'green',
+            value: null,
           },
         ],
       },
@@ -1029,16 +1030,22 @@ local threadsPanel = {
       'increase(varnish_main_threads_failed{job=~"$job",instance=~"$instance"}[$__interval:])',
       datasource=promDatasource,
       legendFormat='{{instance}} - Failed',
+			format='time_series',
+			interval='1m',
     ),
     prometheus.target(
       'increase(varnish_main_threads_created{job=~"$job",instance=~"$instance"}[$__interval:])',
       datasource=promDatasource,
       legendFormat='{{instance}} - Created',
+			format='time_series',
+			interval='1m',
     ),
     prometheus.target(
       'increase(varnish_main_threads_limited{job=~"$job",instance=~"$instance"}[$__interval:])',
       datasource=promDatasource,
       legendFormat='{{instance}} - Limited',
+			format='time_series',
+			interval='1m',
     ),
     prometheus.target(
       'varnish_main_threads{job=~"$job",instance=~"$instance"}',
@@ -1090,6 +1097,7 @@ local threadsPanel = {
         steps: [
           {
             color: 'green',
+            value: null,
           },
         ],
       },
@@ -1162,7 +1170,7 @@ local frontendLogsPanel = {
     {
       datasource: lokiDatasource,
       editorMode: 'code',
-      expr: '{filename="/var/log/varnish/varnishncsa.log", job=~"$job", instance=~"$instance"} |= ``',
+      expr: '{filename=~"/var/log/varnish/varnishncsa-frontend.*.log|/opt/varnish/log/varnishncsa-frontend.*.log", job=~"$job", instance=~"$instance"}',
       queryType: 'range',
       refId: 'A',
     },
@@ -1188,7 +1196,7 @@ local backendLogsPanel = {
     {
       datasource: lokiDatasource,
       editorMode: 'code',
-      expr: '{filename="/var/log/varnish/varnishncsa-backend.log", job=~"$job", instance=~"$instance"} |= ``',
+      expr: '{filename=~"/var/log/varnish/varnishncsa-backend.*.log|/opt/varnish/log/varnishncsa-backend.*.log", job=~"$job", instance=~"$instance"}',
       queryType: 'range',
       refId: 'A',
     },
