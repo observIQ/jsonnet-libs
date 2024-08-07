@@ -714,8 +714,8 @@ local logsPanel = {
               'label_values(tomcat_bytesreceived_total, job)',
               label='Job',
               refresh=1,
-              includeAll=false,
-              multi=false,
+              includeAll=true,
+              multi=true,
               allValues='.+',
               sort=0
             ),
@@ -725,8 +725,8 @@ local logsPanel = {
               'label_values(tomcat_bytesreceived_total, instance)',
               label='Instance',
               refresh=1,
-              includeAll=false,
-              multi=false,
+              includeAll=true,
+              multi=true,
               allValues='.+',
               sort=0
             ),
