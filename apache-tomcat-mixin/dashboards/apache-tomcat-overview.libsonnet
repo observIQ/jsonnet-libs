@@ -716,7 +716,7 @@ local logsPanel = {
               refresh=1,
               includeAll=false,
               multi=false,
-              allValues='',
+              allValues='.+',
               sort=0
             ),
             template.new(
@@ -727,7 +727,7 @@ local logsPanel = {
               refresh=1,
               includeAll=false,
               multi=false,
-              allValues='',
+              allValues='.+',
               sort=0
             ),
             template.new(
@@ -738,7 +738,7 @@ local logsPanel = {
               refresh=1,
               includeAll=true,
               multi=true,
-              allValues='',
+              allValues='.+',
               sort=0
             ),
             template.new(
@@ -749,7 +749,7 @@ local logsPanel = {
               refresh=1,
               includeAll=true,
               multi=true,
-              allValues='',
+              allValues='.+',
               sort=0
             ),
           ],
