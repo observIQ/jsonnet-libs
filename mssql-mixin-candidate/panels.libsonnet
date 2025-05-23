@@ -136,6 +136,6 @@ local utils = commonlib.utils;
         )
         + g.panel.timeSeries.standardOptions.withUnit('faults')
         + g.panel.timeSeries.fieldConfig.defaults.custom.withFillOpacity(0)
-        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false)
-    }
+        + g.panel.timeSeries.fieldConfig.defaults.custom.withSpanNulls(false),
+    },
 }
