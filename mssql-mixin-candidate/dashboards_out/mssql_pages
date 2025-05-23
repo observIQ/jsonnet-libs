@@ -1,0 +1,95 @@
+{
+      "annotations": {
+         "list": [ ]
+      },
+      "links": [
+         {
+            "keepTime": true,
+            "title": "Back to Mssql Overview",
+            "type": "link",
+            "url": "/d/mssql_mssql_overview"
+         },
+         {
+            "keepTime": true,
+            "title": "Back to Mssql Pages",
+            "type": "link",
+            "url": "/d/mssql_mssql_pages"
+         },
+         {
+            "keepTime": true,
+            "title": "Logs",
+            "type": "link",
+            "url": "/d/mssql-logs"
+         },
+         {
+            "keepTime": true,
+            "title": "Mssql Overview",
+            "type": "link",
+            "url": "/d/mssql_mssql_overview"
+         },
+         {
+            "asDropdown": true,
+            "includeVars": true,
+            "keepTime": true,
+            "tags": [
+               "influxdb-mixin"
+            ],
+            "title": "All dashboards",
+            "type": "dashboards"
+         }
+      ],
+      "panels": [ ],
+      "refresh": "1m",
+      "schemaVersion": 39,
+      "tags": [
+         "influxdb-mixin"
+      ],
+      "templating": {
+         "list": [
+            {
+               "label": "Prometheus data source",
+               "name": "prometheus_datasource",
+               "query": "prometheus",
+               "regex": "",
+               "type": "datasource"
+            },
+            {
+               "allValue": ".+",
+               "datasource": {
+                  "type": "prometheus",
+                  "uid": "${prometheus_datasource}"
+               },
+               "includeAll": true,
+               "label": "Job",
+               "multi": true,
+               "name": "job",
+               "query": "label_values(up{job=~\"integrations/mssql\"}, job)",
+               "refresh": 2,
+               "sort": 1,
+               "type": "query"
+            },
+            {
+               "allValue": ".+",
+               "datasource": {
+                  "type": "prometheus",
+                  "uid": "${prometheus_datasource}"
+               },
+               "includeAll": true,
+               "label": "Instance",
+               "multi": true,
+               "name": "instance",
+               "query": "label_values(up{job=~\"integrations/mssql\",job=~\"$job\"}, instance)",
+               "refresh": 2,
+               "sort": 1,
+               "type": "query"
+            }
+         ]
+      },
+      "time": {
+         "from": "now-30m",
+         "to": "now"
+      },
+      "timezone": "default",
+      "title": " MSSQL pages",
+      "uid": "mssql_mssql_pages"
+   }
